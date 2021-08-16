@@ -20,5 +20,10 @@
     "rollup-plugin-copy": "^3.4.0",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "compromise": "^13.11.3",
+    "compromise-dates": "^2.2.1",
+    "compromise-keypress": "^0.0.2"
   }
 }
