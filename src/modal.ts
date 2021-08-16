@@ -7,11 +7,9 @@ export class CreateTodoModal extends Modal {
     constructor(app: App, plugin: TodoModalPlugin) {
         super(app);
         this.plugin = plugin;
-        console.log("creating modal...");
     }
 
     onOpen() {
-        console.log("opening modal...");
         this.contentEl.createEl("h2", {text: "New Todo"});
 
         this.contentEl.createEl("form", {}, (form) => {
