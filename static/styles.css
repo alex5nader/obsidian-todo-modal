@@ -1,0 +1,18 @@
+.tmp-list-setting {
+    display: flex;
+    flex-direction: column;
+
+    /*noinspection CssUnresolvedCustomProperty*/
+    border-top: 1px solid var(--background-modifier-border);
+
+    padding: 9px 0;
+}
+
+.tmp-list-setting .setting-item {
+    border-top: none;
+    padding: 9px 0;
+}
+
+.tmp-list-setting input {
+    margin-right: 6px;
+}
