@@ -24,6 +24,7 @@
   "dependencies": {
     "compromise": "^13.11.3",
     "compromise-dates": "^2.2.1",
-    "compromise-keypress": "^0.0.2"
+    "compromise-keypress": "^0.0.2",
+    "compromise-numbers": "^1.4.0"
   }
 }

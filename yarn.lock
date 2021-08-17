@@ -340,6 +340,11 @@ compromise-keypress@^0.0.2:
     tap-dancer "0.3.1"
     tape "5.0.1"
 
+compromise-numbers@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/compromise-numbers/-/compromise-numbers-1.4.0.tgz#22e545923243333bc1e8a2e82da2e922afb50400"
+  integrity sha512-3ceRpwZIWduVSMYn54ET1ELdI7bvXQk42uDwxffxiJBxgKCwcCfVbiLuTG62cI+qTHchwLDh4vp9i3WARXROFQ==
+
 compromise@^13.11.3:
   version "13.11.3"
   resolved "https://registry.yarnpkg.com/compromise/-/compromise-13.11.3.tgz#3f6b687fbefdbd1ef674f263f6e5c06b29c324d9"

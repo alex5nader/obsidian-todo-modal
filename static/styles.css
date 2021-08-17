@@ -16,3 +16,7 @@
 .tmp-list-setting input {
     margin-right: 6px;
 }
+
+.tmp-labelled-toggle {
+    margin: 0 6px;
+}
