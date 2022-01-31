@@ -37,28 +37,28 @@ export class CreateTodoModal extends Modal {
                     window.setTimeout(() => text.inputEl.focus(), 10);
                 });
 
-            let group = "0";
+            let groupIdx = "0";
             new Setting(form)
                 .setName("Group")
                 .addDropdown(drop => {
                     this.plugin.settings.groups.forEach((group, idx) => {
                         drop.addOption(idx.toString(), group);
                     });
-                    drop.setValue(group);
+                    drop.setValue(groupIdx);
 
-                    drop.onChange(value => group = value);
+                    drop.onChange(idx => groupIdx = idx);
                 });
 
-            let priority = this.plugin.settings.defaultPriority.toString();
+            let priorityIdx = this.plugin.settings.defaultPriority.toString();
             new Setting(form)
                 .setName("Priority")
                 .addDropdown(drop => {
                     this.plugin.settings.priorities.forEach((priority, idx) => {
                         drop.addOption(idx.toString(), priority);
                     });
-                    drop.setValue(priority);
+                    drop.setValue(priorityIdx);
 
-                    drop.onChange(value => priority = value);
+                    drop.onChange(idx => priorityIdx = idx);
                 });
 
             let rangeSelector: DateRangeSelector = "start";
@@ -66,8 +66,9 @@ export class CreateTodoModal extends Modal {
             let dueDate: DateRange | undefined = undefined;
             let dueDatePreview: HTMLElement;
             function updatePreview() {
-                console.log(dueDate);
-                dueDatePreview.setText(moment(dueDate[rangeSelector]).format("YYYY-MM-DD, HH:mm"));
+                if (dueDate) {
+                    dueDatePreview.setText(moment(dueDate[rangeSelector]).format("YYYY-MM-DD, HH:mm"));
+                }
             }
 
             new Setting(form)
@@ -109,12 +110,18 @@ export class CreateTodoModal extends Modal {
                 });
             dueDatePreview = dueDateInput.descEl;
 
+            let openWhenFinished: boolean = false;
             form.createDiv("modal-button-container", container => {
                 container
                     .createEl("button", { attr: { type: "button" }, text: "Cancel" })
                     .addEventListener("click", () => this.close());
 
                 container.createEl("button", { attr: { type: "submit" }, cls: "mod-cta", text: "Create Todo" });
+
+                container.createEl("button", { attr: { type: "submit" }, cls: "mod-cta", text: "Create and Open"})
+                    .addEventListener("click", () => {
+                        openWhenFinished = true;
+                    });
             });
 
             form.addEventListener("submit", async (evt) => {
@@ -131,24 +138,32 @@ export class CreateTodoModal extends Modal {
                     dueBy = undefined;
                 }
 
+                const group = this.plugin.settings.groups[Number.parseInt(groupIdx)];
+                const priority = this.plugin.settings.priorities[Number.parseInt(priorityIdx)];
+
                 const content = new FrontMatterBuilder()
                     .add("done", "false")
-                    .add("group", this.plugin.settings.groups[Number.parseInt(group)])
-                    .add("priority", this.plugin.settings.priorities[Number.parseInt(priority)])
+                    .add("group", group)
+                    .add("priority", priority)
                     .add("due-by", dueBy)
                     .build() + "\n\n";
 
-                const path = normalizePath(this.plugin.settings.todoPath + "/" + title + ".md");
-                console.log(path);
-                const file = await this.app.vault.create(
-                    path,
-                    content
-                );
+                const folderPath = normalizePath(`${this.plugin.settings.todoPath}/${group}`);
+                const filePath = normalizePath(`${folderPath}/${title}.md`);
+                console.log(filePath);
 
-                await this.app.workspace.getLeaf(false).openFile(file, {
-                    active: true,
-                    state: {mode: "source"},
-                });
+                if (!await this.app.vault.adapter.exists(folderPath)) {
+                    this.app.vault.adapter.mkdir(folderPath);
+                }
+
+                const file = await this.app.vault.create(filePath, content);
+
+                if (openWhenFinished) {
+                    await this.app.workspace.getLeaf(false).openFile(file, {
+                        active: true,
+                        state: {mode: "source"},
+                    });
+                }
             })
         });
     }
